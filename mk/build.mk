@@ -1,5 +1,5 @@
-ifneq "" "$(filter-out clean clean-%,$(or $(MAKECMDGOALS),all))"
-include config.mk
+ifneq "" "$(filter-out clean clean-% config,$(or $(MAKECMDGOALS),all))"
+-include config.mk
 endif
 
 CC        ?= gcc
@@ -41,18 +41,12 @@ $(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
-$(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c config.mk | build/%/gumbo/
+$(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c | build/%/gumbo/
 	@$(PRINT) CC '$@'
 	@$(CC) $(CCOPTS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@
-
-config.mk: configure
-	@if test ! -f $@; then \
-	 $(PRINT) CONFIGURE '$@'; \
-	 ./configure; \
-	fi
 
 
 .PHONY: build-all build-any build-lua53 build-lua52 build-lua51

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+exec make config
+
 cmdfind() {
     for C in $*; do
         command -v "$C" && return 0
